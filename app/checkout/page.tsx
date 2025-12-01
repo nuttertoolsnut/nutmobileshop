@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from 'react';
-import { Form, Input, Button, Steps, App, Upload, Card, Alert } from 'antd';
+import { Form, Input, Button, Steps, App, Upload, Card, Alert, type UploadFile } from 'antd';
 import { UploadOutlined, HomeOutlined, CreditCardOutlined, CheckCircleOutlined, QrcodeOutlined } from '@ant-design/icons';
 import { useRouter } from 'next/navigation';
 import { useCartStore } from '@/store/useCartStore';
@@ -84,10 +84,16 @@ function CheckoutForm() {
         }
 
         const file = fileList[0].originFileObj;
+
+        if (!file) {
+          message.error('ไฟล์ไม่ถูกต้อง กรุณาอัพโหลดใหม่');
+          setUploading(false);
+          return;
+        }
         
         // 1. Verify Slip with API
         const formData = new FormData();
-        formData.append('file', file);
+        formData.append('file', file as Blob);
         formData.append('amount', finalTotal.toString());
 
         // Upload to Supabase

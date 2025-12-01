@@ -17,7 +17,7 @@ function CheckoutForm() {
   const [form] = Form.useForm();
   const [paymentMethod, setPaymentMethod] = useState('transfer');
   const [uploading, setUploading] = useState(false);
-  const [fileList, setFileList] = useState<any[]>([]);
+  const [fileList, setFileList] = useState<UploadFile[]>([]);
   
   const totalPrice = getTotalPrice();
   const discountAmount = getDiscountAmount();
@@ -135,7 +135,7 @@ function CheckoutForm() {
                     <p><strong>เวลา:</strong> {verifyResult.data.transDate} {verifyResult.data.transTime}</p>
                   </div>
                 )}
-                <p className="mt-4 text-gray-500 text-xs">กด "ตกลง" เพื่อยืนยันคำสั่งซื้อ</p>
+                <p className="mt-4 text-gray-500 text-xs">กด &quot;ตกลง&quot; เพื่อยืนยันคำสั่งซื้อ</p>
               </div>
             ),
             okText: 'ยืนยันคำสั่งซื้อ (Confirm Order)',

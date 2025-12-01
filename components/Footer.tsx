@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import Image from 'next/image';
 
 export default function Footer() {
@@ -24,20 +25,20 @@ export default function Footer() {
           <div>
             <h4 className="font-bold mb-4">สินค้า</h4>
             <ul className="space-y-2 text-muted-foreground">
-              <li><a href="/shop" className="hover:text-primary">โทรศัพท์มือถือ</a></li>
-              <li><a href="/shop" className="hover:text-primary">แท็บเล็ต</a></li>
-              <li><a href="/shop" className="hover:text-primary">อุปกรณ์เสริม</a></li>
-              <li><a href="/shop" className="hover:text-primary">สินค้าลดราคา</a></li>
+              <li><Link href="/shop" className="hover:text-primary">โทรศัพท์มือถือ</Link></li>
+              <li><Link href="/shop" className="hover:text-primary">แท็บเล็ต</Link></li>
+              <li><Link href="/shop" className="hover:text-primary">อุปกรณ์เสริม</Link></li>
+              <li><Link href="/shop" className="hover:text-primary">สินค้าลดราคา</Link></li>
             </ul>
           </div>
 
           <div>
             <h4 className="font-bold mb-4">บริการลูกค้า</h4>
             <ul className="space-y-2 text-muted-foreground">
-              <li><a href="/account" className="hover:text-primary">สถานะคำสั่งซื้อ</a></li>
-              <li><a href="/warranty" className="hover:text-primary">การรับประกัน</a></li>
-              <li><a href="/return-policy" className="hover:text-primary">นโยบายการคืนสินค้า</a></li>
-              <li><a href="/contact" className="hover:text-primary">ติดต่อเรา</a></li>
+              <li><Link href="/account" className="hover:text-primary">สถานะคำสั่งซื้อ</Link></li>
+              <li><Link href="/warranty" className="hover:text-primary">การรับประกัน</Link></li>
+              <li><Link href="/return-policy" className="hover:text-primary">นโยบายการคืนสินค้า</Link></li>
+              <li><Link href="/contact" className="hover:text-primary">ติดต่อเรา</Link></li>
             </ul>
           </div>
 

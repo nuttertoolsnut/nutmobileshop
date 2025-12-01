@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState, useCallback } from 'react';
 import { supabase } from '@/lib/supabaseClient';
-import { Table, Button, Modal, Form, Input, Select, App, Space, Tag, Row, Col, Tabs, InputNumber, Card, AutoComplete } from 'antd';
+import { Table, Button, Modal, Form, Input, Select, App, Space, Tag, Row, Col, Tabs, InputNumber, Card, AutoComplete, Spin } from 'antd';
 import { PlusOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import Image from 'next/image';
 import ImageUpload from '@/components/ImageUpload';
@@ -329,25 +329,79 @@ export default function AdminPage() {
     },
   ];
 
+  const MobileProductCard = ({ product }: { product: Product }) => (
+    <div className="bg-white p-4 rounded-xl border border-gray-100 shadow-sm mb-4">
+      <div className="flex gap-4">
+        <div className="w-20 h-20 flex-shrink-0 relative rounded-lg overflow-hidden bg-gray-100">
+          <Image 
+            src={product.image_url || "https://via.placeholder.com/300?text=No+Image"} 
+            alt={product.name}
+            fill
+            className="object-cover"
+            unoptimized
+          />
+        </div>
+        <div className="flex-1 min-w-0">
+          <div className="flex justify-between items-start">
+            <h3 className="font-bold text-gray-900 truncate pr-2">{product.name}</h3>
+            <span className="text-xs text-gray-400">#{product.id}</span>
+          </div>
+          <p className="text-sm text-gray-500 mb-1">
+            {categories.find(c => c.id === product.category_id)?.name || '-'}
+          </p>
+          <div className="flex justify-between items-end mt-2">
+            <div>
+              <div className="text-lg font-bold text-primary">฿{product.price.toLocaleString()}</div>
+              <div className="text-xs text-gray-500">Stock: {product.stock || 0}</div>
+            </div>
+            <Space>
+              <Button icon={<EditOutlined />} size="small" onClick={() => handleEdit(product)} />
+              <Button icon={<DeleteOutlined />} danger size="small" onClick={() => handleDelete(product.id)} />
+            </Space>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
   return (
-    <div style={{ padding: 24, background: '#fff' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 20 }}>
-        <h1>Product Management</h1>
-        <Space>
+    <div className="max-w-7xl mx-auto">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900 m-0">Product Management</h1>
+          <p className="text-gray-500 text-sm mt-1">Manage your inventory and products</p>
+        </div>
+        <div className="flex w-full md:w-auto gap-2">
           <Input.Search 
             placeholder="Search products..." 
             allowClear 
             onSearch={value => setSearchText(value)}
             onChange={e => setSearchText(e.target.value)}
-            style={{ width: 300 }}
+            className="w-full md:w-[300px]"
           />
-          <Button type="primary" icon={<PlusOutlined />} onClick={() => { setEditingId(null); setVariants([]); form.resetFields(); setIsModalOpen(true); }}>
-            Add New Product
+          <Button type="primary" icon={<PlusOutlined />} onClick={() => { setEditingId(null); setVariants([]); form.resetFields(); setIsModalOpen(true); }} className="flex-shrink-0">
+            Add New
           </Button>
-        </Space>
+        </div>
       </div>
 
-      <Table dataSource={filteredProducts} columns={columns} rowKey="id" loading={loading} bordered />
+      {/* Desktop View */}
+      <div className="hidden md:block bg-white p-6 rounded-xl border border-gray-100 shadow-sm">
+        <Table dataSource={filteredProducts} columns={columns} rowKey="id" loading={loading} />
+      </div>
+
+      {/* Mobile View */}
+      <div className="md:hidden">
+        {loading ? (
+          <div className="flex justify-center py-10"><Spin size="large" /></div>
+        ) : filteredProducts.length > 0 ? (
+          filteredProducts.map(product => <MobileProductCard key={product.id} product={product} />)
+        ) : (
+          <div className="text-center py-10 text-gray-400 bg-white rounded-xl border border-dashed">
+            <p>No products found</p>
+          </div>
+        )}
+      </div>
 
       <Modal 
         title={editingId ? "Edit Product" : "Add New Product"} 
@@ -356,6 +410,8 @@ export default function AdminPage() {
         footer={null}
         width={900}
         forceRender
+        style={{ top: 20 }}
+        className="product-modal"
       >
         <Form form={form} layout="vertical" onFinish={handleSave}>
           <Tabs defaultActiveKey="1" items={[

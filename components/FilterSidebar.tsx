@@ -1,4 +1,4 @@
-import { Checkbox, Slider, Radio, Button, Collapse } from 'antd';
+import { Checkbox, Slider, Radio, Button, Collapse, type RadioChangeEvent } from 'antd';
 import { FilterOutlined } from '@ant-design/icons';
 // import type { CheckboxValueType } from 'antd/es/checkbox/Group';
 type CheckboxValueType = string | number | boolean;
@@ -45,7 +45,7 @@ export default function FilterSidebar({
     setFilters({ ...filters, priceRange: value as [number, number] });
   };
 
-  const handleConditionChange = (e: any) => {
+  const handleConditionChange = (e: RadioChangeEvent) => {
     setFilters({ ...filters, condition: e.target.value });
   };
 

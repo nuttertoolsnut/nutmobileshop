@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from 'react';
-import { Card, Statistic, Row, Col, Spin } from 'antd';
+import { Card, Statistic, Spin } from 'antd';
 import { ShoppingOutlined, DollarOutlined, UserOutlined, RiseOutlined } from '@ant-design/icons';
 import { supabase } from '@/lib/supabaseClient';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
@@ -66,81 +66,86 @@ export default function AdminDashboard() {
     setLoading(false);
   };
 
-  if (loading) return <div className="p-10 text-center"><Spin size="large" /></div>;
+  if (loading) return <div className="flex justify-center py-20"><Spin size="large" /></div>;
 
   return (
-    <div>
-      <h1 className="text-2xl font-bold mb-6">Dashboard Overview</h1>
+    <div className="max-w-7xl mx-auto">
+      <div className="mb-8">
+        <h1 className="text-2xl font-bold text-gray-900">Dashboard Overview</h1>
+        <p className="text-gray-500">Welcome back! Here's what's happening with your store today.</p>
+      </div>
       
-      <Row gutter={16}>
-        <Col span={6}>
-          <Card>
-            <Statistic 
-              title="Total Sales" 
-              value={stats.totalSales} 
-              precision={2} 
-              prefix={<DollarOutlined />} 
-              suffix="THB" 
-              valueStyle={{ color: '#3f8600' }}
-            />
-          </Card>
-        </Col>
-        <Col span={6}>
-          <Card>
-            <Statistic 
-              title="Orders" 
-              value={stats.totalOrders} 
-              prefix={<ShoppingOutlined />} 
-            />
-          </Card>
-        </Col>
-        <Col span={6}>
-          <Card>
-            <Statistic 
-              title="Total Users" 
-              value={stats.newUsers} 
-              prefix={<UserOutlined />} 
-            />
-          </Card>
-        </Col>
-        <Col span={6}>
-          <Card>
-            <Statistic 
-              title="Growth" 
-              value={stats.growth} 
-              precision={2} 
-              valueStyle={{ color: '#cf1322' }} 
-              prefix={<RiseOutlined />} 
-              suffix="%" 
-            />
-          </Card>
-        </Col>
-      </Row>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <Card bordered={false} className="shadow-sm hover:shadow-md transition-shadow">
+          <Statistic 
+            title={<span className="text-gray-500 font-medium">Total Sales</span>}
+            value={stats.totalSales} 
+            precision={2} 
+            prefix={<DollarOutlined className="text-primary bg-primary/10 p-2 rounded-lg mr-2" />} 
+            suffix="THB" 
+            valueStyle={{ fontWeight: 600 }}
+          />
+        </Card>
+        <Card bordered={false} className="shadow-sm hover:shadow-md transition-shadow">
+          <Statistic 
+            title={<span className="text-gray-500 font-medium">Total Orders</span>}
+            value={stats.totalOrders} 
+            prefix={<ShoppingOutlined className="text-blue-500 bg-blue-50 p-2 rounded-lg mr-2" />} 
+            valueStyle={{ fontWeight: 600 }}
+          />
+        </Card>
+        <Card bordered={false} className="shadow-sm hover:shadow-md transition-shadow">
+          <Statistic 
+            title={<span className="text-gray-500 font-medium">Total Users</span>}
+            value={stats.newUsers} 
+            prefix={<UserOutlined className="text-purple-500 bg-purple-50 p-2 rounded-lg mr-2" />} 
+            valueStyle={{ fontWeight: 600 }}
+          />
+        </Card>
+        <Card bordered={false} className="shadow-sm hover:shadow-md transition-shadow">
+          <Statistic 
+            title={<span className="text-gray-500 font-medium">Growth</span>}
+            value={stats.growth} 
+            precision={2} 
+            valueStyle={{ color: '#3f8600', fontWeight: 600 }} 
+            prefix={<RiseOutlined className="text-green-500 bg-green-50 p-2 rounded-lg mr-2" />} 
+            suffix="%" 
+          />
+        </Card>
+      </div>
 
-      <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8">
-        <Card title="Sales Trend (Last 7 Days)">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <Card title="Sales Trend (Last 7 Days)" bordered={false} className="shadow-sm">
           <div className="h-[300px] w-full">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={salesData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis />
-                <Tooltip />
-                <Bar dataKey="sales" fill="#f97316" />
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#eee" />
+                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#888', fontSize: 12 }} dy={10} />
+                <YAxis axisLine={false} tickLine={false} tick={{ fill: '#888', fontSize: 12 }} />
+                <Tooltip 
+                  cursor={{ fill: '#f3f4f6' }}
+                  contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+                />
+                <Bar dataKey="sales" fill="#f97316" radius={[4, 4, 0, 0]} barSize={40} />
               </BarChart>
             </ResponsiveContainer>
           </div>
         </Card>
         
-        <Card title="Top Products (Recent)">
-          <ul>
+        <Card title="Top Products (Recent)" bordered={false} className="shadow-sm">
+          <div className="space-y-4">
             {topProducts.map((p, i) => (
-              <li key={i} className="flex justify-between py-2 border-b last:border-0">
-                <span>{p.name}</span>
-                <span className="font-bold">฿{p.price.toLocaleString()}</span>
-              </li>
+              <div key={i} className="flex justify-between items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center text-gray-400 font-medium border border-gray-200">
+                    {i + 1}
+                  </div>
+                  <span className="font-medium text-gray-700">{p.name}</span>
+                </div>
+                <span className="font-bold text-primary">฿{p.price.toLocaleString()}</span>
+              </div>
             ))}
-          </ul>
+          </div>
         </Card>
       </div>
     </div>

@@ -19,14 +19,16 @@ export default function ProductGallery({ images, activeImage }: ProductGalleryPr
   const [selectedImage, setSelectedImage] = useState(validImages[0] || 'https://via.placeholder.com/500?text=No+Image');
 
   // Update selected image if activeImage changes
+  // Update selected image if activeImage changes
   useEffect(() => {
     if (activeImage) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setSelectedImage(activeImage);
     } else if (validImages.length > 0) {
        // If no active image, default to first
        setSelectedImage(validImages[0]);
     }
-  }, [activeImage, validImages[0]]);
+  }, [activeImage, images]); // Use 'images' instead of validImages[0] to be stable
 
   if (validImages.length === 0) {
     return (

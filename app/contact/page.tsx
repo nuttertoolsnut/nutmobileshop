@@ -28,7 +28,7 @@ export default function ContactPage() {
                 <div>
                   <h4 className="font-bold text-lg">เบอร์โทรศัพท์</h4>
                   <p className="text-gray-600 text-lg">080-007-7375</p>
-                  <p className="text-sm text-muted-foreground">ทุกวัน 09:00 - 20:00 น.</p>
+                  <p className="text-sm text-muted-foreground">ทุกวัน 09:00 - 18:00 น.</p>
                 </div>
               </div>
 
@@ -52,7 +52,7 @@ export default function ContactPage() {
                 <div>
                   <h4 className="font-bold text-lg">Facebook Page</h4>
                   <p className="text-gray-600">Nut Mobile Shop</p>
-                  <Button type="link" className="p-0 h-auto" href="https://www.facebook.com/NutMobileShop" target="_blank">
+                  <Button type="link" className="p-0 h-auto" href="https://www.facebook.com/profile.php?id=100037274241372" target="_blank">
                     ไปยังเพจร้าน
                   </Button>
                 </div>
@@ -66,7 +66,7 @@ export default function ContactPage() {
                   <h4 className="font-bold text-lg">ที่อยู่ร้าน</h4>
                   <p className="text-gray-600">
                     ร้านนัทโมบาย (Nut Mobile Shop)<br />
-                    อำเภอเมือง จังหวัดเลย<br />
+                    59 หมู่7 ต.ผาอินทร์แปลง อ.เอราวัณ จังหวัดเลย<br />
                     42000
                   </p>
                 </div>

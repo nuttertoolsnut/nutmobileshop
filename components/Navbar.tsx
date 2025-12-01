@@ -9,17 +9,32 @@ import { useCartStore } from '@/store/useCartStore';
 
 import { supabase } from '@/lib/supabaseClient';
 
+import { User } from '@supabase/supabase-js';
+
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const totalItems = useCartStore((state) => state.getTotalItems());
   const router = useRouter();
 
   const [activeOrderCount, setActiveOrderCount] = useState(0);
 
+  const fetchActiveOrders = async (userId: string) => {
+    const { count, error } = await supabase
+      .from('orders')
+      .select('*', { count: 'exact', head: true })
+      .eq('user_id', userId)
+      .in('status', ['pending', 'paid', 'preparing', 'shipped']);
+    
+    if (!error && count !== null) {
+      setActiveOrderCount(count);
+    }
+  };
+
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
     
     // Check current session
@@ -48,18 +63,6 @@ export default function Navbar() {
 
     return () => subscription.unsubscribe();
   }, []);
-
-  const fetchActiveOrders = async (userId: string) => {
-    const { count, error } = await supabase
-      .from('orders')
-      .select('*', { count: 'exact', head: true })
-      .eq('user_id', userId)
-      .in('status', ['pending', 'paid', 'preparing', 'shipped']);
-    
-    if (!error && count !== null) {
-      setActiveOrderCount(count);
-    }
-  };
 
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 

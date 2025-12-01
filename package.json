@@ -9,12 +9,12 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@ant-design/cssinjs": "^2.0.1",
-    "@ant-design/icons": "^6.1.0",
+    "@ant-design/cssinjs": "^1.21.0",
+    "@ant-design/icons": "^5.5.0",
     "@ant-design/nextjs-registry": "^1.2.0",
     "@supabase/ssr": "^0.8.0",
     "@supabase/supabase-js": "^2.84.0",
-    "antd": "^6.0.0",
+    "antd": "^5.22.0",
     "axios": "^1.13.2",
     "dotenv": "^17.2.3",
     "html5-qrcode": "^2.3.8",

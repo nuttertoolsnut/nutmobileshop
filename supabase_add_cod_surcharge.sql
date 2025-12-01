@@ -1,0 +1,2 @@
+ALTER TABLE orders 
+ADD COLUMN cod_surcharge NUMERIC DEFAULT 0;

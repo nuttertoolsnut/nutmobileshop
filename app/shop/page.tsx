@@ -21,7 +21,10 @@ interface Product {
   created_at?: string;
 }
 
-export default function ShopPage() {
+import { Suspense } from 'react';
+
+function ShopContent() {
+  const searchParams = useSearchParams();
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<{id: number, name: string}[]>([]);
@@ -73,7 +76,6 @@ export default function ShopPage() {
   // Filter Logic
   const filteredProducts = products.filter(product => {
     // Search Query Filter
-    const searchParams = new URLSearchParams(window.location.search);
     const searchQuery = searchParams.get('search')?.toLowerCase();
     
     if (searchQuery && !product.name.toLowerCase().includes(searchQuery)) {
@@ -226,5 +228,13 @@ export default function ShopPage() {
         />
       </Drawer>
     </div>
+  );
+}
+
+export default function ShopPage() {
+  return (
+    <Suspense fallback={<div className="flex justify-center py-20"><Spin size="large" /></div>}>
+      <ShopContent />
+    </Suspense>
   );
 }

@@ -8,7 +8,9 @@ import { useCartStore } from '@/store/useCartStore';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { supabase } from '@/lib/supabaseClient';
 
-export default function CartPage() {
+import { Suspense } from 'react';
+
+function CartContent() {
   const { message } = App.useApp();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -219,5 +221,17 @@ export default function CartPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function CartPage() {
+  return (
+    <Suspense fallback={
+      <div className="container mx-auto px-4 py-20 text-center">
+        <div className="text-6xl animate-pulse">🛒</div>
+      </div>
+    }>
+      <CartContent />
+    </Suspense>
   );
 }

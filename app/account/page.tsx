@@ -5,7 +5,9 @@ import { UserOutlined, LogoutOutlined, ShoppingOutlined } from '@ant-design/icon
 import { supabase } from '@/lib/supabaseClient';
 import { useRouter, useSearchParams } from 'next/navigation';
 
-export default function AccountPage() {
+import { Suspense } from 'react';
+
+function AccountContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const defaultTab = searchParams.get('tab') || 'orders';
@@ -113,9 +115,7 @@ export default function AccountPage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      {/* ... header ... */}
       <div className="bg-white p-6 rounded-xl border border-border mb-8 flex items-center justify-between">
-        {/* ... user info ... */}
         <div className="flex items-center gap-4">
           <Avatar size={64} icon={<UserOutlined />} className="bg-primary" />
           <div>
@@ -159,7 +159,14 @@ export default function AccountPage() {
           ]}
         />
       </div>
-      {/* ... debug info ... */}
     </div>
+  );
+}
+
+export default function AccountPage() {
+  return (
+    <Suspense fallback={<div className="flex justify-center py-20"><Spin size="large" /></div>}>
+      <AccountContent />
+    </Suspense>
   );
 }

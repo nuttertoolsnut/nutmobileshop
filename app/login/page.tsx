@@ -1,11 +1,11 @@
 "use client";
-import { useState, useEffect } from 'react';
-import { Form, Input, Button, Tabs, App, Divider } from 'antd';
+import { useState, useEffect, Suspense } from 'react';
+import { Form, Input, Button, Tabs, App, Divider, Spin } from 'antd';
 import { UserOutlined, LockOutlined, MailOutlined, GoogleOutlined, FacebookFilled } from '@ant-design/icons';
 import { supabase } from '@/lib/supabaseClient';
 import { useRouter, useSearchParams } from 'next/navigation';
 
-export default function LoginPage() {
+function LoginContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { message } = App.useApp();
@@ -152,5 +152,13 @@ export default function LoginPage() {
         />
       </div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div className="flex justify-center py-20"><Spin size="large" /></div>}>
+      <LoginContent />
+    </Suspense>
   );
 }

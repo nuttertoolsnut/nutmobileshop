@@ -1,6 +1,7 @@
 import { Checkbox, Slider, Radio, Button, Collapse } from 'antd';
 import { FilterOutlined } from '@ant-design/icons';
-import type { CheckboxValueType } from 'antd/es/checkbox/Group';
+// import type { CheckboxValueType } from 'antd/es/checkbox/Group';
+type CheckboxValueType = string | number | boolean;
 
 interface Category {
   id: number;
@@ -58,7 +59,7 @@ export default function FilterSidebar({
       <Collapse 
         defaultActiveKey={['1', '2', '3', '4']} 
         ghost 
-        expandIconPlacement="end"
+        expandIconPosition="end"
         items={[
           {
             key: '1',

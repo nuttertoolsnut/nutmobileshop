@@ -2,7 +2,12 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   images: {
-    domains: ['images.unsplash.com', 'via.placeholder.com', 'xvddulfhkviiblidoiaq.supabase.co', 'promptpay.io'],
+    remotePatterns: [
+      { protocol: 'https', hostname: 'images.unsplash.com' },
+      { protocol: 'https', hostname: 'via.placeholder.com' },
+      { protocol: 'https', hostname: 'xvddulfhkviiblidoiaq.supabase.co' },
+      { protocol: 'https', hostname: 'promptpay.io' },
+    ],
   },
 
 };

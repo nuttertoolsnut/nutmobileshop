@@ -46,7 +46,13 @@ export default function AdminSidebar() {
   ];
 
   // Determine selected key based on current path
-  const selectedKey = menuItems.find(item => item.key && pathname.startsWith(item.key))?.key || '/admin/dashboard';
+  const selectedKey = menuItems?.find(item => 
+    item && 
+    'key' in item && 
+    item.key && 
+    typeof item.key === 'string' && 
+    pathname.startsWith(item.key)
+  )?.key?.toString() || '/admin/dashboard';
 
   return (
     <Sider width={250} theme="light" className="border-r border-border">

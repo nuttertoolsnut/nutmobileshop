@@ -1,7 +1,7 @@
 "use client";
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Layout, Menu } from 'antd';
+import { Layout, Menu, MenuProps } from 'antd';
 import { ShoppingOutlined, AppstoreOutlined, DashboardOutlined, HomeOutlined, UserOutlined, TagOutlined } from '@ant-design/icons';
 
 const { Sider } = Layout;
@@ -9,7 +9,7 @@ const { Sider } = Layout;
 export default function AdminSidebar() {
   const pathname = usePathname();
 
-  const menuItems = [
+  const menuItems: MenuProps['items'] = [
     {
       key: '/admin/dashboard',
       icon: <DashboardOutlined />,

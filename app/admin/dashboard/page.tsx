@@ -81,7 +81,7 @@ export default function AdminDashboard() {
               precision={2} 
               prefix={<DollarOutlined />} 
               suffix="THB" 
-              styles={{ content: { color: '#3f8600' } }}
+              valueStyle={{ color: '#3f8600' }}
             />
           </Card>
         </Col>
@@ -109,7 +109,7 @@ export default function AdminDashboard() {
               title="Growth" 
               value={stats.growth} 
               precision={2} 
-              styles={{ content: { color: '#cf1322' } }} 
+              valueStyle={{ color: '#cf1322' }} 
               prefix={<RiseOutlined />} 
               suffix="%" 
             />

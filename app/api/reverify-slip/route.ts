@@ -54,8 +54,9 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ success: false, message: data.message || 'Verification failed' });
     }
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Slip re-verification error:', error);
-    return NextResponse.json({ success: false, message: error.message }, { status: 500 });
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    return NextResponse.json({ success: false, message: errorMessage }, { status: 500 });
   }
 }

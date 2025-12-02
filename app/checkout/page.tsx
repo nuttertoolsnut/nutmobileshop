@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from 'react';
-import { Form, Input, Button, Steps, App, Upload, Card, Alert, type UploadFile } from 'antd';
-import { UploadOutlined, HomeOutlined, CreditCardOutlined, CheckCircleOutlined, QrcodeOutlined } from '@ant-design/icons';
+import { Form, Input, Button, Steps, App, Upload, Card, type UploadFile } from 'antd';
+import { UploadOutlined, HomeOutlined, CreditCardOutlined, CheckCircleOutlined } from '@ant-design/icons';
 import { useRouter } from 'next/navigation';
 import { useCartStore } from '@/store/useCartStore';
 import { supabase } from '@/lib/supabaseClient';
@@ -71,6 +71,32 @@ function CheckoutForm() {
           zipcode: values.zipcode
         }
       });
+
+      // Ensure Profile Exists (Fix for fk_orders_profiles error)
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('id')
+        .eq('id', user.id)
+        .single();
+
+      if (!profile) {
+        console.log('Profile missing, creating new profile for user:', user.id);
+        const { error: createProfileError } = await supabase
+          .from('profiles')
+          .insert([
+            {
+              id: user.id,
+              email: user.email,
+              full_name: values.fullname,
+              // role defaults to 'customer' in DB usually
+            }
+          ]);
+
+        if (createProfileError) {
+          console.error('Error creating profile:', createProfileError);
+          throw new Error('Failed to create user profile: ' + createProfileError.message);
+        }
+      }
 
       let slipUrl = '';
       let slipData = null;

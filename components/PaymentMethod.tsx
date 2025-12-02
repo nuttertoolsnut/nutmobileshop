@@ -1,7 +1,6 @@
 "use client";
-import { Radio, Space, Card } from 'antd';
+import { Radio, Card } from 'antd';
 import { BankOutlined, WalletOutlined } from '@ant-design/icons';
-import Image from 'next/image';
 
 interface PaymentMethodProps {
   value: string;

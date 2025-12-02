@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { Card, Statistic, Spin } from 'antd';
 import { ShoppingOutlined, DollarOutlined, UserOutlined, RiseOutlined } from '@ant-design/icons';
 import { supabase } from '@/lib/supabaseClient';
@@ -13,14 +13,10 @@ export default function AdminDashboard() {
     newUsers: 0,
     growth: 0
   });
-  const [salesData, setSalesData] = useState<any[]>([]);
-  const [topProducts, setTopProducts] = useState<any[]>([]);
+  const [salesData, setSalesData] = useState<{name: string; sales: number}[]>([]);
+  const [topProducts, setTopProducts] = useState<{name: string; price: number}[]>([]);
 
-  useEffect(() => {
-    void fetchData();
-  }, []);
-
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     setLoading(true);
     
     // 1. Fetch Orders
@@ -64,7 +60,13 @@ export default function AdminDashboard() {
     setTopProducts(products || []);
 
     setLoading(false);
-  };
+  }, []);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    void fetchData();
+  }, [fetchData]);
+
 
   if (loading) return <div className="flex justify-center py-20"><Spin size="large" /></div>;
 
@@ -72,7 +74,7 @@ export default function AdminDashboard() {
     <div className="max-w-7xl mx-auto">
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-gray-900">Dashboard Overview</h1>
-        <p className="text-gray-500">Welcome back! Here's what's happening with your store today.</p>
+        <p className="text-gray-500">Welcome back! Here&apos;s what&apos;s happening with your store today.</p>
       </div>
       
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">

@@ -4,7 +4,8 @@ import { supabase } from '@/lib/supabaseClient';
 import { Card, Spin, Alert } from 'antd';
 
 export default function DebugAuthPage() {
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<unknown>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [profile, setProfile] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string>('');
@@ -64,7 +65,7 @@ export default function DebugAuthPage() {
             <pre className="text-xs overflow-auto mt-2">{JSON.stringify(profile, null, 2)}</pre>
           </>
         ) : (
-          <p className="text-red-500">Profile Not Found (Row missing in 'profiles' table)</p>
+          <p className="text-red-500">Profile Not Found (Row missing in &apos;profiles&apos; table)</p>
         )}
       </Card>
       
@@ -72,8 +73,8 @@ export default function DebugAuthPage() {
         <p><strong>Diagnosis:</strong></p>
         <ul className="list-disc ml-5">
           <li>If <strong>User</strong> is null: You are not logged in.</li>
-          <li>If <strong>Profile</strong> is null: The trigger didn't run. You need to manually insert a row in `profiles` table with ID = User ID.</li>
-          <li>If <strong>Role</strong> is 'customer': You need to change it to 'admin' in Supabase.</li>
+          <li>If <strong>Profile</strong> is null: The trigger didn&apos;t run. You need to manually insert a row in `profiles` table with ID = User ID.</li>
+          <li>If <strong>Role</strong> is &apos;customer&apos;: You need to change it to &apos;admin&apos; in Supabase.</li>
         </ul>
       </div>
     </div>

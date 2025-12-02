@@ -1,7 +1,7 @@
 "use client";
-import { useEffect, useState } from 'react';
-import { Table, Tag, Button, Space, Input, Modal, Avatar, Card } from 'antd';
-import { UserOutlined, SearchOutlined, ShoppingOutlined } from '@ant-design/icons';
+import { useEffect, useState, useCallback } from 'react';
+import { Table, Tag, Button, Space, Input, Modal, Avatar } from 'antd';
+import { UserOutlined, ShoppingOutlined } from '@ant-design/icons';
 import { supabase } from '@/lib/supabaseClient';
 
 interface Profile {
@@ -37,11 +37,7 @@ export default function AdminCustomersPage() {
   const [customerOrders, setCustomerOrders] = useState<Order[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  useEffect(() => {
-    void fetchData();
-  }, []);
-
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     setLoading(true);
     
     // Fetch Profiles
@@ -79,7 +75,13 @@ export default function AdminCustomersPage() {
       setCustomers(stats);
     }
     setLoading(false);
-  };
+  }, []);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    void fetchData();
+  }, [fetchData]);
+
 
   const handleViewHistory = (customer: CustomerStat) => {
     setSelectedCustomer(customer);

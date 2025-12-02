@@ -3,15 +3,16 @@ import { supabase } from '@/lib/supabaseClient';
 import ProductDetailClient from './ProductDetailClient';
 
 type Props = {
-  params: { id: string }
-  searchParams: { [key: string]: string | string[] | undefined }
+  params: Promise<{ id: string }>
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }
 
 export async function generateMetadata(
-  { params }: Props,
+  props: Props,
   parent: ResolvingMetadata
 ): Promise<Metadata> {
   // read route params
+  const params = await props.params;
   const id = params.id;
 
   // fetch data
@@ -48,6 +49,6 @@ export async function generateMetadata(
   };
 }
 
-export default function ProductDetailPage({ params }: Props) {
+export default function ProductDetailPage() {
   return <ProductDetailClient />;
 }

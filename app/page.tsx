@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from 'react';
-import { Carousel, Card, Button, Tag, Rate } from 'antd';
-import { RightOutlined, ThunderboltFilled, ShoppingCartOutlined } from '@ant-design/icons';
+import { Carousel, Button, Tag } from 'antd';
+import { RightOutlined, ThunderboltFilled } from '@ant-design/icons';
 import Link from 'next/link';
 import Image from 'next/image';
 import { supabase } from '@/lib/supabaseClient';

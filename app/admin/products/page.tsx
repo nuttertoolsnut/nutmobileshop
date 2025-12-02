@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState, useCallback } from 'react';
 import { supabase } from '@/lib/supabaseClient';
-import { Table, Button, Modal, Form, Input, Select, App, Space, Tag, Row, Col, Tabs, InputNumber, Card, AutoComplete, Spin } from 'antd';
+import { Table, Button, Modal, Form, Input, Select, App, Space, Row, Col, Tabs, InputNumber, Card, AutoComplete, Spin } from 'antd';
 import { PlusOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import Image from 'next/image';
 import ImageUpload from '@/components/ImageUpload';
@@ -62,7 +62,7 @@ export default function AdminPage() {
     if (error) message.error('Error fetching products: ' + error.message);
     else setProducts(data || []);
     setLoading(false);
-  }, []);
+  }, [message]);
 
   const filteredProducts = products.filter(product => 
     product.name.toLowerCase().includes(searchText.toLowerCase()) ||
@@ -115,7 +115,6 @@ export default function AdminPage() {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleSave = async (values: any) => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { name, category_id, condition, price, image_url, images, description, brand, ...rest } = values;
     
     const productPayload = {
@@ -248,11 +247,11 @@ export default function AdminPage() {
       setEditingId(null);
       setVariants([]);
       void fetchProducts();
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Save error object:', error);
-      console.error('Save error message:', error.message);
-      console.error('Save error details:', error.details);
-      message.error('Save failed: ' + (error.message || 'Unknown error'));
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      // console.error('Save error details:', error.details); // details might not exist on Error
+      message.error('Save failed: ' + errorMessage);
     } finally {
       setLoading(false);
     }
@@ -295,7 +294,7 @@ export default function AdminPage() {
     setVariants(newVariants);
   };
 
-  const handleVariantChange = (index: number, field: keyof ProductVariant, value: any) => {
+  const handleVariantChange = (index: number, field: keyof ProductVariant, value: string | number | null) => {
     const newVariants = [...variants];
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (newVariants[index] as any)[field] = value;

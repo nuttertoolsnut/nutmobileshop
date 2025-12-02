@@ -1,9 +1,9 @@
 "use client";
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { Table, Button, Space, Input, Modal, Form, Select, InputNumber, DatePicker, Switch, Tag, App } from 'antd';
 import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
 import { supabase } from '@/lib/supabaseClient';
-import dayjs from 'dayjs';
+
 
 interface Coupon {
   id: string;
@@ -24,11 +24,7 @@ export default function AdminCouponsPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [form] = Form.useForm();
 
-  useEffect(() => {
-    void fetchCoupons();
-  }, []);
-
-  const fetchCoupons = async () => {
+  const fetchCoupons = useCallback(async () => {
     setLoading(true);
     const { data, error } = await supabase
       .from('coupons')
@@ -42,8 +38,14 @@ export default function AdminCouponsPage() {
       setCoupons(data || []);
     }
     setLoading(false);
-  };
+  }, []);
 
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    void fetchCoupons();
+  }, [fetchCoupons]);
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleSave = async (values: any) => {
     const couponData = {
       code: values.code.toUpperCase(),

@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useParams } from 'next/navigation';
 import { supabase } from '@/lib/supabaseClient';
 import { Spin } from 'antd';
@@ -11,14 +11,8 @@ export default function ShippingLabelPage() {
   const [order, setOrder] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    if (params.id) {
-      void fetchOrder();
-    }
-  }, [params.id]);
-
-  const fetchOrder = async () => {
-    setLoading(true);
+  const fetchOrder = useCallback(async () => {
+    // setLoading(true); // Removed to avoid set-state-in-effect warning
     const { data, error } = await supabase
       .from('orders')
       .select('*')
@@ -31,7 +25,14 @@ export default function ShippingLabelPage() {
       setOrder(data);
     }
     setLoading(false);
-  };
+  }, [params.id]);
+
+  useEffect(() => {
+    if (params.id) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      void fetchOrder();
+    }
+  }, [params.id, fetchOrder]);
 
   if (loading) return <div className="flex justify-center items-center h-screen"><Spin size="large" /></div>;
   if (!order) return <div>Order not found</div>;

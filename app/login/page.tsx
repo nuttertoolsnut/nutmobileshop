@@ -3,10 +3,9 @@ import { useState, useEffect, Suspense } from 'react';
 import { Form, Input, Button, Tabs, App, Divider, Spin } from 'antd';
 import { UserOutlined, LockOutlined, MailOutlined, GoogleOutlined, FacebookFilled } from '@ant-design/icons';
 import { supabase } from '@/lib/supabaseClient';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 
 function LoginContent() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const { message } = App.useApp();
   const [loading, setLoading] = useState(false);

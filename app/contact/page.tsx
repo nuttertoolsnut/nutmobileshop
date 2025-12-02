@@ -1,9 +1,9 @@
 "use client";
 import React from 'react';
 import { Card, Typography, Divider, Button } from 'antd';
-import { PhoneOutlined, MailOutlined, EnvironmentOutlined, FacebookOutlined, MessageOutlined } from '@ant-design/icons';
+import { PhoneOutlined, EnvironmentOutlined, FacebookOutlined, MessageOutlined } from '@ant-design/icons';
 
-const { Title, Paragraph, Text } = Typography;
+const { Title, Text } = Typography;
 
 export default function ContactPage() {
   return (

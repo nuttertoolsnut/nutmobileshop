@@ -1,7 +1,7 @@
 "use client";
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useParams } from 'next/navigation';
-import { Card, Descriptions, Tag, Button, Select, Divider, List, Image as AntImage, App, Spin, Space, Input } from 'antd';
+import { Card, Descriptions, Tag, Button, Select, Divider, Image as AntImage, App, Spin, Space, Input } from 'antd';
 import { ArrowLeftOutlined, SaveOutlined, PlusOutlined, DeleteOutlined, PrinterOutlined } from '@ant-design/icons';
 import { supabase } from '@/lib/supabaseClient';
 import Link from 'next/link';
@@ -42,17 +42,10 @@ export default function AdminOrderDetailPage() {
   const [carriers, setCarriers] = useState<{ id: number; name: string }[]>([]);
   const [newCarrierName, setNewCarrierName] = useState('');
 
-  useEffect(() => {
-    if (params.id) {
-      void fetchOrder();
-    }
-    void fetchCarriers();
-  }, [params.id]);
-
-  const fetchCarriers = async () => {
+  const fetchCarriers = useCallback(async () => {
     const { data } = await supabase.from('carriers').select('*').order('name');
     if (data) setCarriers(data);
-  };
+  }, []);
 
   const handleAddCarrier = async (e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>) => {
     e.preventDefault();
@@ -78,8 +71,8 @@ export default function AdminOrderDetailPage() {
     }
   };
 
-  const fetchOrder = async () => {
-    setLoading(true);
+  const fetchOrder = useCallback(async () => {
+    // setLoading(true); // Removed to avoid set-state-in-effect warning, initial state is true anyway
     const { data, error } = await supabase
       .from('orders')
       .select('*')
@@ -95,13 +88,22 @@ export default function AdminOrderDetailPage() {
       setCarrierName(data.carrier_name || '');
     }
     setLoading(false);
-  };
+  }, [params.id, message]);
+
+  useEffect(() => {
+    if (params.id) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      void fetchOrder();
+    }
+    void fetchCarriers();
+  }, [params.id, fetchOrder, fetchCarriers]);
 
   const handleUpdateStatus = async (newStatus?: string) => {
     if (!order) return;
     const statusToUpdate = newStatus || status;
     
     setUpdating(true);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const updateData: any = { status: statusToUpdate };
     
     if (statusToUpdate === 'shipped') {
@@ -150,8 +152,8 @@ export default function AdminOrderDetailPage() {
         
         // Update local state
         const newSlipData = { success: true, data: result.data };
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        setOrder({ ...order, slip_data: newSlipData } as any);
+
+        setOrder({ ...order, slip_data: newSlipData } as OrderDetail);
 
         // Update database
         await supabase
@@ -163,14 +165,14 @@ export default function AdminOrderDetailPage() {
           .eq('id', order.id);
           
         setStatus('preparing');
-        setOrder({ ...order, slip_data: newSlipData, status: 'preparing' } as any);
+        setOrder({ ...order, slip_data: newSlipData, status: 'preparing' } as OrderDetail);
           
       } else {
         message.error('Re-verification failed: ' + result.message);
         // Optionally update with error info
         const errorSlipData = { success: false, message: result.message };
-         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        setOrder({ ...order, slip_data: errorSlipData } as any);
+
+        setOrder({ ...order, slip_data: errorSlipData } as OrderDetail);
         
         await supabase
           .from('orders')

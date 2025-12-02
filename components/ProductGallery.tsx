@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import Image from 'next/image';
 
 interface ProductGalleryProps {
@@ -9,11 +9,11 @@ interface ProductGalleryProps {
 
 export default function ProductGallery({ images, activeImage }: ProductGalleryProps) {
   // Filter out empty or invalid images
-  const validImages = images.filter(img => {
+  const validImages = useMemo(() => images.filter(img => {
     if (!img || typeof img !== 'string') return false;
     const trimmed = img.trim();
     return trimmed.length > 0 && (trimmed.startsWith('/') || trimmed.startsWith('http://') || trimmed.startsWith('https://'));
-  });
+  }), [images]);
   
   // Use the first valid image or a placeholder
   const [selectedImage, setSelectedImage] = useState(validImages[0] || 'https://via.placeholder.com/500?text=No+Image');
@@ -28,7 +28,7 @@ export default function ProductGallery({ images, activeImage }: ProductGalleryPr
        // If no active image, default to first
        setSelectedImage(validImages[0]);
     }
-  }, [activeImage, images]); // Use 'images' instead of validImages[0] to be stable
+  }, [activeImage, validImages]);
 
   if (validImages.length === 0) {
     return (

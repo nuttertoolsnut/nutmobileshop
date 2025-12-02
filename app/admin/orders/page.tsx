@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from 'react';
-import { Table, Tag, Button, Space, App, Input, Modal, Spin } from 'antd';
+import { Table, Tag, Button, App, Input, Modal, Spin } from 'antd';
 import { EyeOutlined, ScanOutlined } from '@ant-design/icons';
 import { Html5QrcodeScanner } from 'html5-qrcode';
 import Link from 'next/link';
@@ -44,7 +44,7 @@ export default function AdminOrdersPage() {
              scanner.clear().catch(console.error);
           }
           message.success(`Scanned: ${decodedText}`);
-        }, (error) => {
+        }, () => {
           // console.warn(error);
         });
       }, 300); // Wait for Modal animation
@@ -56,26 +56,25 @@ export default function AdminOrdersPage() {
         }
       };
     }
-  }, [isScanModalOpen]);
+  }, [isScanModalOpen, message]);
 
   useEffect(() => {
+    const fetchOrders = async () => {
+      const { data, error } = await supabase
+        .from('orders')
+        .select('*, profiles(full_name)')
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        message.error('Error fetching orders: ' + error.message);
+      } else {
+        setOrders(data || []);
+      }
+      setLoading(false);
+    };
+
     void fetchOrders();
-  }, []);
-
-  const fetchOrders = async () => {
-    setLoading(true);
-    const { data, error } = await supabase
-      .from('orders')
-      .select('*, profiles(full_name)')
-      .order('created_at', { ascending: false });
-
-    if (error) {
-      message.error('Error fetching orders: ' + error.message);
-    } else {
-      setOrders(data || []);
-    }
-    setLoading(false);
-  };
+  }, [message]);
 
   const filteredOrders = orders.filter(order => 
     order.id.toString().includes(searchText) ||

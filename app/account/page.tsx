@@ -12,9 +12,11 @@ function AccountContent() {
   const searchParams = useSearchParams();
   const defaultTab = searchParams.get('tab') || 'orders';
   
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [orders, setOrders] = useState<any[]>([]);
 
   useEffect(() => {
@@ -84,6 +86,7 @@ function AccountContent() {
       title: 'สินค้า', 
       dataIndex: 'items', 
       key: 'items',
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       render: (items: any[]) => (
         <div className="max-w-[200px] truncate">
           {Array.isArray(items) ? items.map(i => i.name).join(', ') : '-'}
@@ -103,6 +106,7 @@ function AccountContent() {
     {
       title: 'การจัดส่ง',
       key: 'shipping',
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       render: (_: any, record: any) => (
         record.status === 'shipped' || record.status === 'completed' ? (
           <div className="text-sm">
@@ -114,6 +118,7 @@ function AccountContent() {
     }
   ];
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const MobileOrderCard = ({ order }: { order: any }) => {
     const { color, label } = getStatusInfo(order.status);
     return (
@@ -133,6 +138,7 @@ function AccountContent() {
         </div>
         
         <div className="border-t border-dashed border-gray-200 py-4 space-y-3">
+          {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
           {Array.isArray(order.items) && order.items.map((item: any, idx: number) => (
             <div key={idx} className="flex justify-between items-center text-sm">
               <div className="flex-1 pr-4">

@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabaseClient';
-import { Spin, message } from 'antd';
+import { Spin } from 'antd';
 
 export default function AuthCallbackPage() {
   const router = useRouter();

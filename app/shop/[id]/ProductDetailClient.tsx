@@ -16,7 +16,7 @@ interface ProductDetail {
   condition: string;
   image_url: string;
   images: string[]; // JSONB array
-  specs: Record<string, string>; // JSONB object
+  specs: Record<string, string> | { key: string; value: string; description?: string }[]; // JSONB object or array
   stock: number;
 }
 
@@ -368,12 +368,29 @@ export default function ProductDetailClient() {
           {product.specs && (
             <div className="bg-gray-50 p-6 rounded-xl space-y-3 mt-6">
               <h3 className="font-bold">สเปคโดยย่อ</h3>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                {Object.entries(product.specs).map(([key, value]) => (
-                  <li key={key} className="flex items-center gap-2">
-                    <CheckCircleFilled className="text-green-500" /> <span className="capitalize">{key}:</span> {value}
-                  </li>
-                ))}
+              <ul className="space-y-4 text-sm text-muted-foreground">
+                {Array.isArray(product.specs) ? (
+                  // New Format: Array
+                  product.specs.map((item, index) => (
+                    <li key={index} className="flex flex-col gap-1">
+                      <div className="flex items-center gap-2 font-medium text-foreground">
+                        <CheckCircleFilled className="text-green-500" /> 
+                        <span>{item.key}:</span> 
+                        <span className="text-muted-foreground font-normal">{item.value}</span>
+                      </div>
+                      {item.description && (
+                        <p className="pl-6 text-xs text-gray-400">{item.description}</p>
+                      )}
+                    </li>
+                  ))
+                ) : (
+                  // Legacy Format: Object
+                  Object.entries(product.specs).map(([key, value]) => (
+                    <li key={key} className="flex items-center gap-2">
+                      <CheckCircleFilled className="text-green-500" /> <span className="capitalize">{key}:</span> {value}
+                    </li>
+                  ))
+                )}
               </ul>
             </div>
           )}

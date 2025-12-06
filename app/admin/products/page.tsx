@@ -2,7 +2,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { supabase } from '@/lib/supabaseClient';
 import { Table, Button, Modal, Form, Input, Select, App, Space, Row, Col, Tabs, InputNumber, Card, AutoComplete, Spin } from 'antd';
-import { PlusOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { PlusOutlined, DeleteOutlined, EditOutlined, MinusCircleOutlined } from '@ant-design/icons';
 import Image from 'next/image';
 import ImageUpload from '@/components/ImageUpload';
 
@@ -17,7 +17,10 @@ interface Product {
   description?: string;
   stock?: number;
   brand?: string;
+  specs?: Record<string, string> | { key: string; value: string; description?: string }[];
 }
+
+
 
 interface Category {
   id: number;
@@ -87,7 +90,24 @@ export default function AdminPage() {
 
   const handleEdit = async (product: Product) => {
     setEditingId(product.id);
-    form.setFieldsValue(product);
+    
+    // Transform specs: Handle both legacy Object and new Array format
+    let specsList: { key: string; value: string; description?: string }[] = [];
+    
+    if (product.specs) {
+      if (Array.isArray(product.specs)) {
+        // New Array Format
+        specsList = product.specs;
+      } else {
+        // Legacy Object Format
+        specsList = Object.entries(product.specs).map(([key, value]) => ({ key, value }));
+      }
+    }
+      
+    form.setFieldsValue({
+      ...product,
+      specs_list: specsList
+    });
     
     // Fetch stock for this product
     const { data: stocks } = await supabase
@@ -115,20 +135,29 @@ export default function AdminPage() {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleSave = async (values: any) => {
-    const { name, category_id, condition, price, image_url, images, description, brand, ...rest } = values;
+    const { name, category_id, condition, price, image_url, images, description, brand, specs_list, ...rest } = values;
     
+    // Fix: Find current product to preserve image if not edited
+    const currentProduct = products.find(p => p.id === editingId);
+    const finalImageUrl = image_url || (editingId ? currentProduct?.image_url : undefined);
+
+    // Transform specs array back for saving (Keep as Array now!)
+    // Ensure we filter out empty keys
+    const specs = specs_list?.filter((item: { key: string; value: string }) => item.key && item.value) || null;
+
     const productPayload = {
       name, 
       category_id, 
       condition, 
       price: Number(price), 
-      image_url, 
+      image_url: finalImageUrl, 
       images, 
       description,
       brand,
       stock: Number(rest.stock || 0),
-      // Default image if empty
-      ...( !image_url && { image_url: "https://via.placeholder.com/300?text=No+Image" })
+      specs: specs || null,
+      // Default image if truly empty
+      ...( !finalImageUrl && { image_url: "https://via.placeholder.com/300?text=No+Image" })
     };
 
     let productId = editingId;
@@ -593,6 +622,58 @@ export default function AdminPage() {
                       <InputNumber min={0} style={{ width: '100%' }} />
                     </Form.Item>
                   ))}
+                </div>
+              )
+            },
+            {
+              key: '5',
+              label: 'Specifications',
+              children: (
+                <div>
+                  <p className="mb-4 text-gray-500">Key features of the product (e.g., Screen Size, Processor, Battery).</p>
+                  <Form.List name="specs_list">
+                    {(fields, { add, remove }) => (
+                      <>
+                        {fields.map(({ key, name, ...restField }) => (
+                          <Space key={key} style={{ display: 'flex', marginBottom: 8 }} align="baseline" className="items-start">
+                            <div className="flex flex-col gap-2">
+                              <div className="flex gap-2">
+                                <Form.Item
+                                  {...restField}
+                                  name={[name, 'key']}
+                                  rules={[{ required: true, message: 'Missing key' }]}
+                                  style={{ marginBottom: 0 }}
+                                >
+                                  <Input placeholder="Feature (e.g., Screen)" />
+                                </Form.Item>
+                                <Form.Item
+                                  {...restField}
+                                  name={[name, 'value']}
+                                  rules={[{ required: true, message: 'Missing value' }]}
+                                  style={{ marginBottom: 0 }}
+                                >
+                                  <Input placeholder="Detail (e.g., 6.1 inch)" />
+                                </Form.Item>
+                                <MinusCircleOutlined onClick={() => remove(name)} style={{ marginTop: 8 }} />
+                              </div>
+                              <Form.Item
+                                {...restField}
+                                name={[name, 'description']}
+                                style={{ marginBottom: 0 }}
+                              >
+                                <Input.TextArea placeholder="Optional description..." rows={1} autoSize />
+                              </Form.Item>
+                            </div>
+                          </Space>
+                        ))}
+                        <Form.Item>
+                          <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
+                            Add Specification
+                          </Button>
+                        </Form.Item>
+                      </>
+                    )}
+                  </Form.List>
                 </div>
               )
             }

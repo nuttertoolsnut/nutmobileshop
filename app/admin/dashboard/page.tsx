@@ -78,7 +78,7 @@ export default function AdminDashboard() {
       </div>
       
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        <Card bordered={false} className="shadow-sm hover:shadow-md transition-shadow">
+        <Card variant="borderless" className="shadow-sm hover:shadow-md transition-shadow">
           <Statistic 
             title={<span className="text-gray-500 font-medium">Total Sales</span>}
             value={stats.totalSales} 
@@ -88,7 +88,7 @@ export default function AdminDashboard() {
             valueStyle={{ fontWeight: 600 }}
           />
         </Card>
-        <Card bordered={false} className="shadow-sm hover:shadow-md transition-shadow">
+        <Card variant="borderless" className="shadow-sm hover:shadow-md transition-shadow">
           <Statistic 
             title={<span className="text-gray-500 font-medium">Total Orders</span>}
             value={stats.totalOrders} 
@@ -96,7 +96,7 @@ export default function AdminDashboard() {
             valueStyle={{ fontWeight: 600 }}
           />
         </Card>
-        <Card bordered={false} className="shadow-sm hover:shadow-md transition-shadow">
+        <Card variant="borderless" className="shadow-sm hover:shadow-md transition-shadow">
           <Statistic 
             title={<span className="text-gray-500 font-medium">Total Users</span>}
             value={stats.newUsers} 
@@ -104,7 +104,7 @@ export default function AdminDashboard() {
             valueStyle={{ fontWeight: 600 }}
           />
         </Card>
-        <Card bordered={false} className="shadow-sm hover:shadow-md transition-shadow">
+        <Card variant="borderless" className="shadow-sm hover:shadow-md transition-shadow">
           <Statistic 
             title={<span className="text-gray-500 font-medium">Growth</span>}
             value={stats.growth} 
@@ -117,7 +117,7 @@ export default function AdminDashboard() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <Card title="Sales Trend (Last 7 Days)" bordered={false} className="shadow-sm">
+        <Card title="Sales Trend (Last 7 Days)" variant="borderless" className="shadow-sm">
           <div className="h-[300px] w-full">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={salesData}>
@@ -134,7 +134,7 @@ export default function AdminDashboard() {
           </div>
         </Card>
         
-        <Card title="Top Products (Recent)" bordered={false} className="shadow-sm">
+        <Card title="Top Products (Recent)" variant="borderless" className="shadow-sm">
           <div className="space-y-4">
             {topProducts.map((p, i) => (
               <div key={i} className="flex justify-between items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
